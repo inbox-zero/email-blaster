@@ -31,6 +31,11 @@
                 <h1>Email Blaster</h1>
                 <div class="by-line">by <a href="https://getinboxzero.com" target="_blank">Inbox Zero</a></div>
             </div>
+            <div class="audio-controls">
+                <button id="mute-button" class="mute-button">
+                    <span class="mute-icon">🔊</span>
+                </button>
+            </div>
             <div class="hud">
                 <div class="score">Score: <span id="score">0</span></div>
                 <div class="missed">Missed: <span id="missed">0</span>/5</div>
@@ -78,6 +83,10 @@
         </ul>
         <p>Press spacebar to shoot the selected weapon at falling emails.</p>
     </div>
+    <!-- Audio element for background music -->
+    <audio id="background-music" loop>
+        <!-- Source will be set via JavaScript -->
+    </audio>
     <script src="game.js"></script>
 </body>
 </html>

@@ -8,6 +8,21 @@ const PROJECTILE_SPEED = 8; // pixels per frame
 const MIN_EMAIL_SPACING_VERTICAL = 150; // Minimum vertical space between emails
 const MIN_EMAIL_SPACING_HORIZONTAL = 250; // Minimum horizontal space between emails
 
+// Audio constants
+const AUDIO_TRACKS = [
+//   'public/audio/Inbox Zero - The Anthem 1.mp3',
+//   'public/audio/Inbox Zero - The Anthem 2.mp3',
+//   'public/audio/Inbox Zero Warriors 1.mp3',
+  'public/audio/Inbox Zero Warriors 2.mp3'
+];
+let isMuted = false;
+
+// Sound effects
+const SOUND_EFFECTS = {
+  shoot: 'public/audio/gun-shots-230534.mp3',
+  hit: 'public/audio/explosion-312361.mp3'
+};
+
 // Game state
 let score = 0;
 let missedEmails = 0;
@@ -27,6 +42,9 @@ const scoreDisplay = document.getElementById("score");
 const missedDisplay = document.getElementById("missed");
 const weaponElements = document.querySelectorAll(".weapon");
 const activeWeaponDisplay = document.getElementById("active-weapon");
+const backgroundMusic = document.getElementById("background-music");
+const muteButton = document.getElementById("mute-button");
+const muteIcon = document.querySelector(".mute-icon");
 
 // Set canvas dimensions
 canvas.width = GAME_WIDTH;
@@ -244,6 +262,9 @@ function init() {
   updateScore();
   updateMissedEmails();
 
+  // Initialize audio
+  initializeAudio();
+
   // Start spawning emails
   spawnEmail();
 
@@ -268,6 +289,106 @@ function init() {
   if (isMobileDevice()) {
     showMobileInstructions();
     handleOrientationChange();  // Check orientation immediately
+  }
+}
+
+// Initialize audio functionality
+function initializeAudio() {
+  // Select a random track from the available tracks
+  const randomTrack = AUDIO_TRACKS[Math.floor(Math.random() * AUDIO_TRACKS.length)];
+  
+  console.log("Playing track:", randomTrack);
+  
+  // Set the audio source
+  backgroundMusic.src = randomTrack;
+  
+  // Set initial volume
+  backgroundMusic.volume = 0.5;
+  
+  // Add mute button event listener
+  muteButton.addEventListener('click', toggleMute);
+  
+  // Preload sound effects
+  preloadSoundEffects();
+  
+  // Add a click event listener to the document to start audio
+  // This helps with browser autoplay policies
+  document.addEventListener('click', function startAudioOnInteraction() {
+    backgroundMusic.play().catch(error => {
+      console.log('Audio play prevented:', error);
+    });
+    document.removeEventListener('click', startAudioOnInteraction);
+  }, { once: true });
+}
+
+// Toggle mute state
+function toggleMute() {
+  isMuted = !isMuted;
+  
+  if (isMuted) {
+    backgroundMusic.pause();
+    muteIcon.textContent = '\ud83d\udd07'; // Muted icon
+    
+    // Stop all currently playing sound effects
+    for (const effect of Object.keys(SOUND_EFFECTS)) {
+      const pool = SOUND_EFFECTS[`${effect}Pool`];
+      if (pool) {
+        for (const audio of pool) {
+          if (!audio.paused) {
+            audio.pause();
+            audio.currentTime = 0;
+          }
+        }
+      }
+    }
+  } else {
+    backgroundMusic.play().catch(error => {
+      console.log('Audio play prevented:', error);
+    });
+    muteIcon.textContent = '\ud83d\udd0a'; // Unmuted icon
+  }
+  
+  console.log('Audio muted:', isMuted);
+}
+
+// Preload sound effects
+function preloadSoundEffects() {
+  // Create audio objects for each sound effect
+  for (const effect of Object.keys(SOUND_EFFECTS)) {
+    // Create multiple instances of each sound effect for overlapping playback
+    SOUND_EFFECTS[`${effect}Pool`] = [];
+    for (let i = 0; i < 3; i++) {
+      const audio = new Audio();
+      audio.src = SOUND_EFFECTS[effect];
+      audio.volume = 0.3;
+      audio.load(); // Preload the audio
+      SOUND_EFFECTS[`${effect}Pool`].push(audio);
+    }
+  }
+  
+  console.log('Sound effects preloaded');
+}
+
+// Play a sound effect
+function playSoundEffect(effect) {
+  if (!isMuted) {
+    // Find an available audio element from the pool
+    const pool = SOUND_EFFECTS[`${effect}Pool`];
+    if (pool && pool.length > 0) {
+      // Find an audio element that's not playing or use the first one
+      let audio = pool.find(a => a.paused);
+      if (!audio) {
+        audio = pool[0]; // If all are playing, reuse the first one
+        audio.currentTime = 0;
+      }
+      
+      // Play the sound effect
+      audio.play().catch(error => {
+        console.log(`Sound effect ${effect} play prevented:`, error);
+      });
+    } else {
+      console.warn(`Sound effect pool for ${effect} not found`);
+    }
   }
 }
 
@@ -364,6 +485,21 @@ function updateEmails() {
 
     // Remove emails that fall off the screen
     if (email.y > GAME_HEIGHT) {
+      // Play explosion sound when email hits the bottom
+      playSoundEffect('hit');
+      
+      // Add explosion animation
+      const explosion = document.createElement('div');
+      explosion.className = 'explosion';
+      explosion.style.left = `${email.x}px`;
+      explosion.style.top = `${GAME_HEIGHT - 50}px`;
+      document.querySelector('.game-container').appendChild(explosion);
+      
+      // Remove explosion after animation completes
+      setTimeout(() => {
+        explosion.remove();
+      }, 500);
+      
       email.element.remove();
       emails.splice(i, 1);
       // Penalty for missing an email
@@ -438,6 +574,21 @@ function isColliding(obj1, obj2) {
 
 // Handle a hit between a projectile and an email
 function handleHit(projectile, email) {
+  // Play hit sound effect
+  playSoundEffect('hit');
+  
+  // Create explosion at hit location
+  const explosion = document.createElement('div');
+  explosion.className = 'explosion';
+  explosion.style.left = `${email.x + 75}px`;  // Center on email
+  explosion.style.top = `${email.y + 25}px`;
+  document.querySelector('.game-container').appendChild(explosion);
+  
+  // Remove explosion after animation completes
+  setTimeout(() => {
+    explosion.remove();
+  }, 600);
+  
   // Add hit animation class
   email.element.style.animation = "hit 0.5s forwards";
 
@@ -601,6 +752,8 @@ function spawnEmail() {
 
 // Fire a projectile
 function fireProjectile() {
+  // No sound effect for shooting
+  
   const projectileElement = document.createElement("div");
   projectileElement.className = `projectile ${activeWeapon}`;
 

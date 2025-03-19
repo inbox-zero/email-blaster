@@ -262,6 +262,86 @@ body {
     color: #e74c3c;
 }
 
+.audio-controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+.mute-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.mute-button:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+    transform: scale(1.1);
+}
+
+/* Explosion animation */
+.explosion {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-color: #ff4500;
+    border-radius: 50%;
+    z-index: 5;
+    animation: explode 0.6s forwards;
+    box-shadow: 0 0 20px 10px rgba(255, 69, 0, 0.7);
+}
+
+.explosion::before, .explosion::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 215, 0, 0.7);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: explode-rays 0.6s forwards;
+}
+
+.explosion::after {
+    background-color: rgba(255, 140, 0, 0.7);
+    animation-delay: 0.1s;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.8);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+@keyframes explode-rays {
+    0% {
+        transform: translate(-50%, -50%) scale(0.3);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
 .weapons {
     display: flex;
     flex-direction: column;
