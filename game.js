@@ -273,6 +273,20 @@ function init() {
   // Add event listeners
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
+  
+  // Start music on first interaction (key press or click)
+  const startMusicOnInteraction = () => {
+    if (!isMuted) {
+      backgroundMusic.play().catch(error => {
+        console.log('Audio play prevented:', error);
+      });
+    }
+    window.removeEventListener('keydown', startMusicOnInteraction);
+    document.removeEventListener('click', startMusicOnInteraction);
+  };
+  
+  window.addEventListener('keydown', startMusicOnInteraction, { once: true });
+  document.addEventListener('click', startMusicOnInteraction, { once: true });
 
   // Add click listeners to weapon selection
   for (const element of weaponElements) {
@@ -296,7 +310,7 @@ function initializeAudio() {
   // Select a random track from the available tracks
   const randomTrack = AUDIO_TRACKS[Math.floor(Math.random() * AUDIO_TRACKS.length)];
   
-  console.log("Playing track:", randomTrack);
+  console.log("Selected track:", randomTrack);
   
   // Set the audio source
   backgroundMusic.src = randomTrack;
@@ -309,15 +323,6 @@ function initializeAudio() {
   
   // Preload sound effects
   preloadSoundEffects();
-  
-  // Add a click event listener to the document to start audio
-  // This helps with browser autoplay policies
-  document.addEventListener('click', function startAudioOnInteraction() {
-    backgroundMusic.play().catch(error => {
-      console.log('Audio play prevented:', error);
-    });
-    document.removeEventListener('click', startAudioOnInteraction);
-  }, { once: true });
 }
 
 // Toggle mute state
