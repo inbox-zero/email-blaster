@@ -252,7 +252,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.score, .missed {
+.score, .missed, .remaining {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
@@ -260,6 +260,10 @@ body {
 
 .missed {
     color: #e74c3c;
+}
+
+.remaining {
+    color: #27ae60;
 }
 
 .audio-controls {

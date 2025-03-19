@@ -7,25 +7,27 @@ const EMAIL_FALL_SPEED = 1.5; // pixels per frame
 const PROJECTILE_SPEED = 8; // pixels per frame
 const MIN_EMAIL_SPACING_VERTICAL = 150; // Minimum vertical space between emails
 const MIN_EMAIL_SPACING_HORIZONTAL = 250; // Minimum horizontal space between emails
+const TOTAL_EMAILS_TO_HANDLE = 50; // Total emails to handle to win the game
 
 // Audio constants
 const AUDIO_TRACKS = [
-  // 'https://email-blaster.vercel.app/audio/Inbox Zero - The Anthem 1.mp3',
-  // 'https://email-blaster.vercel.app/audio/Inbox Zero - The Anthem 2.mp3',
-  // 'https://email-blaster.vercel.app/audio/Inbox Zero Warriors 1.mp3',
-  "https://email-blaster.vercel.app/audio/Inbox Zero Warriors 2.mp3",
+  // 'audio/Inbox Zero - The Anthem 1.mp3',
+  // 'audio/Inbox Zero - The Anthem 2.mp3',
+  // 'audio/Inbox Zero Warriors 1.mp3',
+  "audio/Inbox Zero Warriors 2.mp3",
 ];
 let isMuted = false;
 
 // Sound effects
 const SOUND_EFFECTS = {
-  hit: "https://email-blaster.vercel.app/audio/explosion-312361.mp3",
+  hit: "audio/explosion-312361.mp3",
 };
 
 // Game state
 let score = 0;
 let missedEmails = 0;
 let handledEmails = 0;
+let remainingEmails = TOTAL_EMAILS_TO_HANDLE;
 let activeWeapon = "archive";
 let shooterAngle = 0;
 const emails = [];
@@ -39,6 +41,7 @@ const ctx = canvas.getContext("2d");
 const shooter = document.getElementById("shooter");
 const scoreDisplay = document.getElementById("score");
 const missedDisplay = document.getElementById("missed");
+const remainingDisplay = document.getElementById("remaining");
 const weaponElements = document.querySelectorAll(".weapon");
 const activeWeaponDisplay = document.getElementById("active-weapon");
 const backgroundMusic = document.getElementById("background-music");
@@ -520,10 +523,19 @@ function updateEmails() {
       // Increment missed emails counter
       missedEmails++;
       updateMissedEmails();
+      
+      // Decrement remaining emails counter
+      remainingEmails--;
+      updateRemainingEmails();
 
       // Check for game over condition
       if (missedEmails >= 5) {
         gameOver();
+      }
+      
+      // Check for win condition
+      if (remainingEmails <= 0) {
+        gameWin();
       }
     }
   }
@@ -621,6 +633,15 @@ function handleHit(projectile, email) {
 
   // Increment handled emails counter
   handledEmails++;
+
+  // Decrement remaining emails counter
+  remainingEmails--;
+  updateRemainingEmails();
+
+  // Check for win condition
+  if (remainingEmails <= 0) {
+    gameWin();
+  }
 }
 
 // Show feedback when an email is hit
@@ -849,6 +870,61 @@ function updateMissedEmails() {
   missedDisplay.textContent = missedEmails;
 }
 
+// Update remaining emails display
+function updateRemainingEmails() {
+  remainingDisplay.textContent = remainingEmails;
+}
+
+// Game win function
+function gameWin() {
+  gameRunning = false;
+
+  // Create game win overlay
+  const gameWinOverlay = document.createElement("div");
+  gameWinOverlay.className = "game-over-overlay";
+  gameWinOverlay.innerHTML = `
+    <div class="game-over-content">
+      <h1 class="game-logo">Email Blaster</h1>
+      <div class="by-line">by <a href="https://getinboxzero.com" target="_blank">Inbox Zero</a></div>
+      <h2>You Win!</h2>
+      <div class="game-stats">
+        <div class="stat">
+          <span class="stat-label">Emails Missed:</span>
+          <span class="stat-value">${missedEmails}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Emails Handled:</span>
+          <span class="stat-value">${handledEmails}</span>
+        </div>
+        <div class="stat highlight">
+          <span class="stat-label">Final Score:</span>
+          <span class="stat-value">${score}</span>
+        </div>
+      </div>
+      <button id="restart-button">Play Again</button>
+    </div>
+  `;
+
+  // Center the overlay in the viewport
+  gameWinOverlay.style.position = "fixed";
+  gameWinOverlay.style.top = "0";
+  gameWinOverlay.style.left = "0";
+  gameWinOverlay.style.width = "100%";
+  gameWinOverlay.style.height = "100%";
+
+  // Add to game container and ensure it's at the top level for proper positioning
+  const gameContainer = document.querySelector(".game-container");
+  gameContainer.appendChild(gameWinOverlay);
+
+  // Make sure the overlay is properly positioned
+  gameWinOverlay.style.zIndex = "1000";
+
+  // Add restart button event listener
+  document
+    .getElementById("restart-button")
+    .addEventListener("click", restartGame);
+}
+
 // Game over function
 function gameOver() {
   gameRunning = false;
@@ -915,6 +991,7 @@ function restartGame() {
   score = 0;
   missedEmails = 0;
   handledEmails = 0;
+  remainingEmails = TOTAL_EMAILS_TO_HANDLE;
   shooterAngle = 0;
   activeWeapon = "archive";
   gameRunning = true;
@@ -933,6 +1010,7 @@ function restartGame() {
   // Reset displays
   updateScore();
   updateMissedEmails();
+  updateRemainingEmails();
 
   // Reset shooter position
   shooter.style.transform = "translateX(-50%) rotate(0deg)";
