@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Email Blaster</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-title">
+            <h1>Email Blaster</h1>
+            <div class="by-line">by <a href="https://getinboxzero.com" target="_blank">Inbox Zero</a></div>
+        </div>
+        <div class="hud">
+            <div class="score">Score: <span id="score">0</span></div>
+            <div class="missed">Missed: <span id="missed">0</span>/5</div>
+            <div class="weapons">
+                <div class="weapon" data-weapon="archive" data-key="1">1: Archive Missile</div>
+                <div class="weapon" data-weapon="unsubscribe" data-key="2">2: Unsubscribe Laser</div>
+                <div class="weapon" data-weapon="spam" data-key="3">3: Spam Bomb</div>
+                <div class="weapon" data-weapon="todo" data-key="4">4: To-Do Flag</div>
+                <div class="weapon" data-weapon="reply" data-key="5">5: Reply Dart</div>
+                <div class="weapon" data-weapon="forward" data-key="6">6: Forward Boomerang</div>
+                <div class="weapon" data-weapon="snooze" data-key="7">7: Snooze Clock</div>
+            </div>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="shooter"></div>
+    </div>
+    <div class="instructions">
+        <h2>Instructions:</h2>
+        <p>Use left and right arrow keys to rotate the shooter.</p>
+        <p>Press number keys 1-7 to select different weapons:</p>
+        <ul>
+            <li><strong>1:</strong> Archive Missile - Archive emails for later reference</li>
+            <li><strong>2:</strong> Unsubscribe Laser - Unsubscribe from unwanted mailing lists</li>
+            <li><strong>3:</strong> Spam Bomb - Mark emails as spam</li>
+            <li><strong>4:</strong> To-Do Flag - Add emails to your to-do list</li>
+            <li><strong>5:</strong> Reply Dart - Quick reply to urgent emails</li>
+            <li><strong>6:</strong> Forward Boomerang - Forward emails to someone else</li>
+            <li><strong>7:</strong> Snooze Clock - Snooze emails to deal with later</li>
+        </ul>
+        <p>Press spacebar to shoot the selected weapon at falling emails.</p>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
