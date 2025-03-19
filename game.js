@@ -10,16 +10,16 @@ const MIN_EMAIL_SPACING_HORIZONTAL = 250; // Minimum horizontal space between em
 
 // Audio constants
 const AUDIO_TRACKS = [
-//   'audio/Inbox Zero - The Anthem 1.mp3',
-//   'audio/Inbox Zero - The Anthem 2.mp3',
-//   'audio/Inbox Zero Warriors 1.mp3',
-  'audio/Inbox Zero Warriors 2.mp3'
+  // 'https://email-blaster.vercel.app/audio/Inbox Zero - The Anthem 1.mp3',
+  // 'https://email-blaster.vercel.app/audio/Inbox Zero - The Anthem 2.mp3',
+  // 'https://email-blaster.vercel.app/audio/Inbox Zero Warriors 1.mp3',
+  "https://email-blaster.vercel.app/audio/Inbox Zero Warriors 2.mp3",
 ];
 let isMuted = false;
 
 // Sound effects
 const SOUND_EFFECTS = {
-  hit: 'audio/explosion-312361.mp3'
+  hit: "https://email-blaster.vercel.app/audio/explosion-312361.mp3",
 };
 
 // Game state
@@ -256,7 +256,7 @@ function init() {
 
   // Set initial active weapon
   setActiveWeapon("archive");
-  
+
   // Initialize displays
   updateScore();
   updateMissedEmails();
@@ -273,20 +273,20 @@ function init() {
   // Add event listeners
   window.addEventListener("keydown", handleKeyDown);
   window.addEventListener("keyup", handleKeyUp);
-  
+
   // Start music on first interaction (key press or click)
   const startMusicOnInteraction = () => {
     if (!isMuted) {
-      backgroundMusic.play().catch(error => {
-        console.log('Audio play prevented:', error);
+      backgroundMusic.play().catch((error) => {
+        console.log("Audio play prevented:", error);
       });
     }
-    window.removeEventListener('keydown', startMusicOnInteraction);
-    document.removeEventListener('click', startMusicOnInteraction);
+    window.removeEventListener("keydown", startMusicOnInteraction);
+    document.removeEventListener("click", startMusicOnInteraction);
   };
-  
-  window.addEventListener('keydown', startMusicOnInteraction, { once: true });
-  document.addEventListener('click', startMusicOnInteraction, { once: true });
+
+  window.addEventListener("keydown", startMusicOnInteraction, { once: true });
+  document.addEventListener("click", startMusicOnInteraction, { once: true });
 
   // Add click listeners to weapon selection
   for (const element of weaponElements) {
@@ -294,33 +294,34 @@ function init() {
       setActiveWeapon(element.dataset.weapon);
     });
   }
-  
+
   // Setup touch controls for mobile devices
   setupTouchControls();
-  
+
   // Check if we're on a mobile device and show a message
   if (isMobileDevice()) {
     showMobileInstructions();
-    handleOrientationChange();  // Check orientation immediately
+    handleOrientationChange(); // Check orientation immediately
   }
 }
 
 // Initialize audio functionality
 function initializeAudio() {
   // Select a random track from the available tracks
-  const randomTrack = AUDIO_TRACKS[Math.floor(Math.random() * AUDIO_TRACKS.length)];
-  
+  const randomTrack =
+    AUDIO_TRACKS[Math.floor(Math.random() * AUDIO_TRACKS.length)];
+
   console.log("Selected track:", randomTrack);
-  
+
   // Set the audio source
   backgroundMusic.src = randomTrack;
-  
+
   // Set initial volume
   backgroundMusic.volume = 0.5;
-  
+
   // Add mute button event listener
-  muteButton.addEventListener('click', toggleMute);
-  
+  muteButton.addEventListener("click", toggleMute);
+
   // Preload sound effects
   preloadSoundEffects();
 }
@@ -328,11 +329,11 @@ function initializeAudio() {
 // Toggle mute state
 function toggleMute() {
   isMuted = !isMuted;
-  
+
   if (isMuted) {
     backgroundMusic.pause();
-    muteIcon.textContent = '\ud83d\udd07'; // Muted icon
-    
+    muteIcon.textContent = "\ud83d\udd07"; // Muted icon
+
     // Stop all currently playing sound effects
     for (const effect of Object.keys(SOUND_EFFECTS)) {
       const pool = SOUND_EFFECTS[`${effect}Pool`];
@@ -346,13 +347,13 @@ function toggleMute() {
       }
     }
   } else {
-    backgroundMusic.play().catch(error => {
-      console.log('Audio play prevented:', error);
+    backgroundMusic.play().catch((error) => {
+      console.log("Audio play prevented:", error);
     });
-    muteIcon.textContent = '\ud83d\udd0a'; // Unmuted icon
+    muteIcon.textContent = "\ud83d\udd0a"; // Unmuted icon
   }
-  
-  console.log('Audio muted:', isMuted);
+
+  console.log("Audio muted:", isMuted);
 }
 
 // Preload sound effects
@@ -369,8 +370,8 @@ function preloadSoundEffects() {
       SOUND_EFFECTS[`${effect}Pool`].push(audio);
     }
   }
-  
-  console.log('Sound effects preloaded');
+
+  console.log("Sound effects preloaded");
 }
 
 // Play a sound effect
@@ -380,14 +381,14 @@ function playSoundEffect(effect) {
     const pool = SOUND_EFFECTS[`${effect}Pool`];
     if (pool && pool.length > 0) {
       // Find an audio element that's not playing or use the first one
-      let audio = pool.find(a => a.paused);
+      let audio = pool.find((a) => a.paused);
       if (!audio) {
         audio = pool[0]; // If all are playing, reuse the first one
         audio.currentTime = 0;
       }
-      
+
       // Play the sound effect
-      audio.play().catch(error => {
+      audio.play().catch((error) => {
         console.log(`Sound effect ${effect} play prevented:`, error);
       });
     } else {
@@ -398,14 +399,18 @@ function playSoundEffect(effect) {
 
 // Check if the user is on a mobile device
 function isMobileDevice() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+  return (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    ) || window.innerWidth <= 768
+  );
 }
 
 // Show game instructions
 function showMobileInstructions() {
   const instructions = document.createElement("div");
   instructions.className = "mobile-instructions";
-  
+
   // Different instructions based on device type
   if (isMobileDevice()) {
     instructions.innerHTML = `
@@ -434,12 +439,14 @@ function showMobileInstructions() {
       </div>
     `;
   }
-  
+
   document.querySelector(".game-container").appendChild(instructions);
-  
-  document.getElementById("close-instructions").addEventListener("click", () => {
-    instructions.remove();
-  });
+
+  document
+    .getElementById("close-instructions")
+    .addEventListener("click", () => {
+      instructions.remove();
+    });
 }
 
 // Game loop
@@ -490,30 +497,30 @@ function updateEmails() {
     // Remove emails that fall off the screen
     if (email.y > GAME_HEIGHT) {
       // Play explosion sound when email hits the bottom
-      playSoundEffect('hit');
-      
+      playSoundEffect("hit");
+
       // Add explosion animation
-      const explosion = document.createElement('div');
-      explosion.className = 'explosion';
+      const explosion = document.createElement("div");
+      explosion.className = "explosion";
       explosion.style.left = `${email.x}px`;
       explosion.style.top = `${GAME_HEIGHT - 50}px`;
-      document.querySelector('.game-container').appendChild(explosion);
-      
+      document.querySelector(".game-container").appendChild(explosion);
+
       // Remove explosion after animation completes
       setTimeout(() => {
         explosion.remove();
       }, 500);
-      
+
       email.element.remove();
       emails.splice(i, 1);
       // Penalty for missing an email
       score = Math.max(0, score - 5);
       updateScore();
-      
+
       // Increment missed emails counter
       missedEmails++;
       updateMissedEmails();
-      
+
       // Check for game over condition
       if (missedEmails >= 5) {
         gameOver();
@@ -579,20 +586,20 @@ function isColliding(obj1, obj2) {
 // Handle a hit between a projectile and an email
 function handleHit(projectile, email) {
   // Play hit sound effect
-  playSoundEffect('hit');
-  
+  playSoundEffect("hit");
+
   // Create success hit animation at hit location
-  const successHit = document.createElement('div');
-  successHit.className = 'success-hit';
-  successHit.style.left = `${email.x + 75}px`;  // Center on email
+  const successHit = document.createElement("div");
+  successHit.className = "success-hit";
+  successHit.style.left = `${email.x + 75}px`; // Center on email
   successHit.style.top = `${email.y + 25}px`;
-  document.querySelector('.game-container').appendChild(successHit);
-  
+  document.querySelector(".game-container").appendChild(successHit);
+
   // Remove success hit animation after it completes
   setTimeout(() => {
     successHit.remove();
   }, 400);
-  
+
   // Add hit animation class
   email.element.style.animation = "hit 0.5s forwards";
 
@@ -611,7 +618,7 @@ function handleHit(projectile, email) {
   // Update score
   score += 10;
   updateScore();
-  
+
   // Increment handled emails counter
   handledEmails++;
 }
@@ -654,14 +661,17 @@ function spawnEmail() {
 
   // Check if there's enough space between emails
   let canSpawn = true;
-  
+
   // If there are emails on screen, check their positions
   if (emails.length > 0) {
     // Find the lowest email (the one closest to the top of the screen)
-    const lowestEmail = emails.reduce((lowest, current) => {
-      return current.y < lowest.y ? current : lowest;
-    }, { y: GAME_HEIGHT });
-    
+    const lowestEmail = emails.reduce(
+      (lowest, current) => {
+        return current.y < lowest.y ? current : lowest;
+      },
+      { y: GAME_HEIGHT }
+    );
+
     // If the lowest email is too close to the top, delay spawning
     if (lowestEmail.y < MIN_EMAIL_SPACING_VERTICAL) {
       canSpawn = false;
@@ -701,24 +711,26 @@ function spawnEmail() {
     // Position the email
     const emailWidth = 200;
     const emailHeight = 100;
-    
+
     // Find a suitable horizontal position that's not too close to other emails
     // and ensure it doesn't hang off the screen
     let x;
     let attempts = 0;
     const maxAttempts = 10;
-    
+
     // Add padding to keep emails fully visible
     const horizontalPadding = 20; // Extra padding to ensure emails are fully visible
-    
+
     let isTooClose = false;
     do {
       // Ensure the email stays within the visible area with padding
-      x = horizontalPadding + Math.random() * (GAME_WIDTH - emailWidth - (horizontalPadding * 2));
+      x =
+        horizontalPadding +
+        Math.random() * (GAME_WIDTH - emailWidth - horizontalPadding * 2);
       attempts++;
-      
+
       // Check if this position is far enough from other emails horizontally
-      isTooClose = emails.some(email => {
+      isTooClose = emails.some((email) => {
         // Only check emails that are near the top of the screen
         if (email.y < 150) {
           const horizontalDistance = Math.abs(email.x - x);
@@ -726,9 +738,8 @@ function spawnEmail() {
         }
         return false;
       });
-      
     } while (isTooClose && attempts < maxAttempts);
-    
+
     const y = -emailHeight;
 
     emailElement.style.width = `${emailWidth}px`;
@@ -757,7 +768,7 @@ function spawnEmail() {
 // Fire a projectile
 function fireProjectile() {
   // No sound effect for shooting
-  
+
   const projectileElement = document.createElement("div");
   projectileElement.className = `projectile ${activeWeapon}`;
 
@@ -813,11 +824,13 @@ function setActiveWeapon(weapon) {
       element.classList.remove("active");
     }
   }
-  
+
   // Update the active weapon display text
   if (activeWeaponDisplay) {
     // Get the weapon name from the active element
-    const activeElement = document.querySelector(`.weapon[data-weapon="${weapon}"]`);
+    const activeElement = document.querySelector(
+      `.weapon[data-weapon="${weapon}"]`
+    );
     if (activeElement) {
       // Extract the name part (remove the key prefix)
       const weaponName = activeElement.textContent.split(":")[1].trim();
@@ -839,10 +852,10 @@ function updateMissedEmails() {
 // Game over function
 function gameOver() {
   gameRunning = false;
-  
+
   // Create game over overlay
-  const gameOverOverlay = document.createElement('div');
-  gameOverOverlay.className = 'game-over-overlay';
+  const gameOverOverlay = document.createElement("div");
+  gameOverOverlay.className = "game-over-overlay";
   gameOverOverlay.innerHTML = `
     <div class="game-over-content">
       <h1 class="game-logo">Email Blaster</h1>
@@ -871,60 +884,62 @@ function gameOver() {
   `;
 
   // Center the overlay in the viewport
-  gameOverOverlay.style.position = 'fixed';
-  gameOverOverlay.style.top = '0';
-  gameOverOverlay.style.left = '0';
-  gameOverOverlay.style.width = '100%';
-  gameOverOverlay.style.height = '100%';
-  
+  gameOverOverlay.style.position = "fixed";
+  gameOverOverlay.style.top = "0";
+  gameOverOverlay.style.left = "0";
+  gameOverOverlay.style.width = "100%";
+  gameOverOverlay.style.height = "100%";
+
   // Add to game container and ensure it's at the top level for proper positioning
-  const gameContainer = document.querySelector('.game-container');
+  const gameContainer = document.querySelector(".game-container");
   gameContainer.appendChild(gameOverOverlay);
-  
+
   // Make sure the overlay is properly positioned
-  gameOverOverlay.style.zIndex = '1000';
-  
+  gameOverOverlay.style.zIndex = "1000";
+
   // Add restart button event listener
-  document.getElementById('restart-button').addEventListener('click', restartGame);
+  document
+    .getElementById("restart-button")
+    .addEventListener("click", restartGame);
 }
 
 // Restart game function
 function restartGame() {
   // Remove game over overlay
-  const gameOverOverlay = document.querySelector('.game-over-overlay');
+  const gameOverOverlay = document.querySelector(".game-over-overlay");
   if (gameOverOverlay) {
     gameOverOverlay.remove();
   }
-  
+
   // Reset game state
   score = 0;
   missedEmails = 0;
   handledEmails = 0;
   shooterAngle = 0;
-  activeWeapon = 'archive';
+  activeWeapon = "archive";
   gameRunning = true;
-  
+
   // Clear all emails and projectiles
   for (const email of emails) {
     email.element.remove();
   }
   emails.length = 0;
-  
+
   for (const projectile of projectiles) {
     projectile.element.remove();
   }
   projectiles.length = 0;
-  
+
   // Reset displays
   updateScore();
   updateMissedEmails();
-  
+
   // Reset shooter position
-  shooter.style.transform = 'translateX(-50%) rotate(0deg)';
-  
+  shooter.style.transform = "translateX(-50%) rotate(0deg)";
+
   // Restart game loop
   requestAnimationFrame(gameLoop);
-  
+
   // Start spawning emails again
   spawnEmail();
 }
@@ -957,7 +972,7 @@ function handleKeyUp(e) {
 // Touch controls for mobile
 function setupTouchControls() {
   // Touch event for weapon selection - both mobile and desktop panels
-  const allWeaponElements = document.querySelectorAll('.weapon');
+  const allWeaponElements = document.querySelectorAll(".weapon");
   for (const weapon of allWeaponElements) {
     weapon.addEventListener("touchstart", (e) => {
       e.preventDefault(); // Prevent default touch behavior
@@ -977,19 +992,20 @@ function setupTouchControls() {
     e.preventDefault(); // Prevent scrolling when touching the game
     const touchX = e.touches[0].clientX;
     const deltaX = touchX - touchStartX;
-    
+
     // Update shooter position based on touch movement
     const shooter = document.querySelector(".shooter");
     const shooterRect = shooter.getBoundingClientRect();
     const gameContainerRect = gameContainer.getBoundingClientRect();
-    
+
     // Calculate new position ensuring the shooter stays within bounds
     let newPosition = shooterRect.left + deltaX - gameContainerRect.left;
     if (newPosition < 0) newPosition = 0;
-    if (newPosition > GAME_WIDTH - shooterRect.width) newPosition = GAME_WIDTH - shooterRect.width;
-    
+    if (newPosition > GAME_WIDTH - shooterRect.width)
+      newPosition = GAME_WIDTH - shooterRect.width;
+
     shooter.style.left = `${newPosition}px`;
-    
+
     // Update touch start position for the next move
     touchStartX = touchX;
   });
@@ -1002,19 +1018,19 @@ function setupTouchControls() {
 function createMobileControls() {
   // Check if mobile controls already exist
   if (document.querySelector(".mobile-controls")) return;
-  
+
   const mobileControls = document.createElement("div");
   mobileControls.className = "mobile-controls";
-  
+
   // Only show mobile controls on mobile devices
   if (!isMobileDevice()) {
     mobileControls.style.display = "none";
   }
-  
+
   const fireButton = document.createElement("button");
   fireButton.id = "mobile-fire-button";
   fireButton.textContent = "FIRE";
-  
+
   // Add both touch and click events for the fire button
   fireButton.addEventListener("touchstart", (e) => {
     e.preventDefault();
@@ -1022,14 +1038,14 @@ function createMobileControls() {
       fireProjectile();
     }
   });
-  
+
   // Also add click event for desktop testing
   fireButton.addEventListener("click", () => {
     if (gameRunning) {
       fireProjectile();
     }
   });
-  
+
   mobileControls.appendChild(fireButton);
   document.querySelector(".game-container").appendChild(mobileControls);
 }
@@ -1040,9 +1056,9 @@ function handleOrientationChange() {
     // Check if we're in landscape mode
     if (window.innerWidth > window.innerHeight) {
       // Show landscape warning if not already present
-      if (!document.querySelector('.landscape-warning')) {
-        const warning = document.createElement('div');
-        warning.className = 'landscape-warning';
+      if (!document.querySelector(".landscape-warning")) {
+        const warning = document.createElement("div");
+        warning.className = "landscape-warning";
         warning.innerHTML = `
           <div class="warning-content">
             <h3>Please Rotate Your Device</h3>
@@ -1054,7 +1070,7 @@ function handleOrientationChange() {
       }
     } else {
       // Remove landscape warning if it exists
-      const warning = document.querySelector('.landscape-warning');
+      const warning = document.querySelector(".landscape-warning");
       if (warning) {
         warning.remove();
       }
