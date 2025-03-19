@@ -7,14 +7,10 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="game-container">
-        <div class="game-title">
-            <h1>Email Blaster</h1>
-            <div class="by-line">by <a href="https://getinboxzero.com" target="_blank">Inbox Zero</a></div>
-        </div>
-        <div class="hud">
-            <div class="score">Score: <span id="score">0</span></div>
-            <div class="missed">Missed: <span id="missed">0</span>/5</div>
+    <div class="game-layout">
+        <!-- Weapons panel (visible on desktop only) -->
+        <div class="desktop-weapons-panel">
+            <h3>Weapons</h3>
             <div class="weapons">
                 <div class="weapon" data-weapon="archive" data-key="1">1: Archive Missile</div>
                 <div class="weapon" data-weapon="unsubscribe" data-key="2">2: Unsubscribe Laser</div>
@@ -24,9 +20,48 @@
                 <div class="weapon" data-weapon="forward" data-key="6">6: Forward Boomerang</div>
                 <div class="weapon" data-weapon="snooze" data-key="7">7: Snooze Clock</div>
             </div>
+            <div class="active-weapon-display">
+                Active: <span id="active-weapon">Archive Missile</span>
+            </div>
         </div>
-        <canvas id="gameCanvas"></canvas>
-        <div id="shooter"></div>
+        
+        <!-- Main game container -->
+        <div class="game-container">
+            <div class="game-title">
+                <h1>Email Blaster</h1>
+                <div class="by-line">by <a href="https://getinboxzero.com" target="_blank">Inbox Zero</a></div>
+            </div>
+            <div class="hud">
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="missed">Missed: <span id="missed">0</span>/5</div>
+                <!-- Mobile-only weapons menu -->
+                <div class="mobile-weapons">
+                    <div class="weapon" data-weapon="archive" data-key="1">1: Archive Missile</div>
+                    <div class="weapon" data-weapon="unsubscribe" data-key="2">2: Unsubscribe Laser</div>
+                    <div class="weapon" data-weapon="spam" data-key="3">3: Spam Bomb</div>
+                    <div class="weapon" data-weapon="todo" data-key="4">4: To-Do Flag</div>
+                    <div class="weapon" data-weapon="reply" data-key="5">5: Reply Dart</div>
+                    <div class="weapon" data-weapon="forward" data-key="6">6: Forward Boomerang</div>
+                    <div class="weapon" data-weapon="snooze" data-key="7">7: Snooze Clock</div>
+                </div>
+            </div>
+            <canvas id="gameCanvas"></canvas>
+            <div id="shooter"></div>
+        </div>
+        
+        <!-- CTA panel for Inbox Zero -->
+        <div class="cta-panel">
+            <h3>Reach Inbox Zero Fast</h3>
+            <p>Let AI handle your real emails automatically</p>
+            <div class="cta-features">
+                <div class="cta-feature">✓ Unsubscribe with one click</div>
+                <div class="cta-feature">✓ Auto-archive newsletters</div>
+                <div class="cta-feature">✓ Smart email categorization</div>
+                <div class="cta-feature">✓ AI email assistant</div>
+            </div>
+            <a href="https://getinboxzero.com" target="_blank" class="cta-button">Try Inbox Zero Free</a>
+        </div>
+        </div>
     </div>
     <div class="instructions">
         <h2>Instructions:</h2>

@@ -26,6 +26,7 @@ const shooter = document.getElementById("shooter");
 const scoreDisplay = document.getElementById("score");
 const missedDisplay = document.getElementById("missed");
 const weaponElements = document.querySelectorAll(".weapon");
+const activeWeaponDisplay = document.getElementById("active-weapon");
 
 // Set canvas dimensions
 canvas.width = GAME_WIDTH;
@@ -547,13 +548,18 @@ function spawnEmail() {
     const emailHeight = 100;
     
     // Find a suitable horizontal position that's not too close to other emails
+    // and ensure it doesn't hang off the screen
     let x;
     let attempts = 0;
     const maxAttempts = 10;
     
+    // Add padding to keep emails fully visible
+    const horizontalPadding = 20; // Extra padding to ensure emails are fully visible
+    
     let isTooClose = false;
     do {
-      x = Math.random() * (GAME_WIDTH - emailWidth);
+      // Ensure the email stays within the visible area with padding
+      x = horizontalPadding + Math.random() * (GAME_WIDTH - emailWidth - (horizontalPadding * 2));
       attempts++;
       
       // Check if this position is far enough from other emails horizontally
@@ -642,12 +648,23 @@ function fireProjectile() {
 function setActiveWeapon(weapon) {
   activeWeapon = weapon;
 
-  // Update UI
+  // Update UI - highlight active weapon in both desktop and mobile panels
   for (const element of weaponElements) {
     if (element.dataset.weapon === weapon) {
       element.classList.add("active");
     } else {
       element.classList.remove("active");
+    }
+  }
+  
+  // Update the active weapon display text
+  if (activeWeaponDisplay) {
+    // Get the weapon name from the active element
+    const activeElement = document.querySelector(`.weapon[data-weapon="${weapon}"]`);
+    if (activeElement) {
+      // Extract the name part (remove the key prefix)
+      const weaponName = activeElement.textContent.split(":")[1].trim();
+      activeWeaponDisplay.textContent = weaponName;
     }
   }
 }
@@ -782,8 +799,9 @@ function handleKeyUp(e) {
 
 // Touch controls for mobile
 function setupTouchControls() {
-  // Touch event for weapon selection
-  for (const weapon of weaponElements) {
+  // Touch event for weapon selection - both mobile and desktop panels
+  const allWeaponElements = document.querySelectorAll('.weapon');
+  for (const weapon of allWeaponElements) {
     weapon.addEventListener("touchstart", (e) => {
       e.preventDefault(); // Prevent default touch behavior
       setActiveWeapon(weapon.dataset.weapon);

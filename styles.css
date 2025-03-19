@@ -10,8 +10,140 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 20px;
     color: #333;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Game Layout */
+.game-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Desktop Weapons Panel */
+.desktop-weapons-panel {
+    width: 200px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 40px; /* Align with the game container */
+    flex-shrink: 0; /* Prevent panel from shrinking */
+}
+
+/* CTA Panel for Inbox Zero */
+.cta-panel {
+    width: 200px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 40px;
+    flex-shrink: 0;
+}
+
+.cta-panel h3 {
+    margin: 0 0 5px 0;
+    color: #3498db;
+    font-size: 18px;
+    text-align: center;
+}
+
+.cta-panel p {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+}
+
+.cta-features {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.cta-feature {
+    font-size: 13px;
+    color: #444;
+}
+
+.cta-button {
+    background-color: #3498db;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+    background-color: #2980b9;
+}
+
+.desktop-weapons-panel h3 {
+    margin: 0 0 10px 0;
+    color: #3498db;
+    text-align: center;
+    font-size: 20px;
+}
+
+.desktop-weapons-panel .weapons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.desktop-weapons-panel .weapon {
+    padding: 8px 12px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid #ddd;
+}
+
+.desktop-weapons-panel .weapon:hover {
+    background-color: #e0f0ff;
+    border-color: #3498db;
+}
+
+.desktop-weapons-panel .weapon.active {
+    background-color: #3498db;
+    color: white;
+    border-color: #2980b9;
+}
+
+.active-weapon-display {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+}
+
+#active-weapon {
+    font-weight: bold;
+    color: #3498db;
 }
 
 .game-container {
@@ -23,6 +155,7 @@ body {
     overflow: hidden;
     background-color: #e6f7ff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0; /* Prevent container from shrinking */
 }
 
 /* Game Title */
@@ -44,7 +177,7 @@ body {
     font-family: 'Arial', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
-    transform: rotate(-2deg);
+    font-style: normal;
 }
 
 .by-line {
@@ -197,6 +330,8 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .instructions h2 {
@@ -525,6 +660,11 @@ body {
     100% { transform: rotate(0deg); }
 }
 
+/* Mobile weapons menu */
+.mobile-weapons {
+    display: none; /* Hidden by default on desktop */
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
     body {
@@ -535,6 +675,23 @@ body {
         width: 100%;
         height: 100%;
         touch-action: none;
+    }
+    
+    .game-layout {
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .desktop-weapons-panel, .cta-panel {
+        display: none; /* Hide desktop weapons panel and CTA panel on mobile */
+    }
+    
+    .mobile-weapons {
+        display: grid; /* Show mobile weapons on mobile */
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+        margin-top: 5px;
     }
     
     .game-container {
