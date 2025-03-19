@@ -286,7 +286,7 @@ body {
     transform: scale(1.1);
 }
 
-/* Explosion animation */
+/* Explosion animations */
 .explosion {
     position: absolute;
     width: 60px;
@@ -296,6 +296,17 @@ body {
     z-index: 5;
     animation: explode 0.6s forwards;
     box-shadow: 0 0 20px 10px rgba(255, 69, 0, 0.7);
+}
+
+.success-hit {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #2ecc71;
+    border-radius: 50%;
+    z-index: 5;
+    animation: success-explode 0.4s forwards;
+    box-shadow: 0 0 10px 5px rgba(46, 204, 113, 0.7);
 }
 
 .explosion::before, .explosion::after {
@@ -338,6 +349,21 @@ body {
     }
     100% {
         transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+@keyframes success-explode {
+    0% {
+        transform: scale(0.3);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.5);
         opacity: 0;
     }
 }

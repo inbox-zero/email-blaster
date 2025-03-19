@@ -10,17 +10,16 @@ const MIN_EMAIL_SPACING_HORIZONTAL = 250; // Minimum horizontal space between em
 
 // Audio constants
 const AUDIO_TRACKS = [
-//   'public/audio/Inbox Zero - The Anthem 1.mp3',
-//   'public/audio/Inbox Zero - The Anthem 2.mp3',
-//   'public/audio/Inbox Zero Warriors 1.mp3',
-  'public/audio/Inbox Zero Warriors 2.mp3'
+//   'audio/Inbox Zero - The Anthem 1.mp3',
+//   'audio/Inbox Zero - The Anthem 2.mp3',
+//   'audio/Inbox Zero Warriors 1.mp3',
+  'audio/Inbox Zero Warriors 2.mp3'
 ];
 let isMuted = false;
 
 // Sound effects
 const SOUND_EFFECTS = {
-  shoot: 'public/audio/gun-shots-230534.mp3',
-  hit: 'public/audio/explosion-312361.mp3'
+  hit: 'audio/explosion-312361.mp3'
 };
 
 // Game state
@@ -577,17 +576,17 @@ function handleHit(projectile, email) {
   // Play hit sound effect
   playSoundEffect('hit');
   
-  // Create explosion at hit location
-  const explosion = document.createElement('div');
-  explosion.className = 'explosion';
-  explosion.style.left = `${email.x + 75}px`;  // Center on email
-  explosion.style.top = `${email.y + 25}px`;
-  document.querySelector('.game-container').appendChild(explosion);
+  // Create success hit animation at hit location
+  const successHit = document.createElement('div');
+  successHit.className = 'success-hit';
+  successHit.style.left = `${email.x + 75}px`;  // Center on email
+  successHit.style.top = `${email.y + 25}px`;
+  document.querySelector('.game-container').appendChild(successHit);
   
-  // Remove explosion after animation completes
+  // Remove success hit animation after it completes
   setTimeout(() => {
-    explosion.remove();
-  }, 600);
+    successHit.remove();
+  }, 400);
   
   // Add hit animation class
   email.element.style.animation = "hit 0.5s forwards";
